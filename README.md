@@ -14,6 +14,10 @@ E2E тесты на Playwright для Testboard.
 ```bash
 npm install
 ```
+Удостовериться, что устанвоились браузеры
+```bash
+npx playwright install
+```
 
 ### Использование вечного пользователя в тестах
 
