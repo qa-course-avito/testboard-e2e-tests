@@ -26,8 +26,8 @@ npx playwright install
 Для использования СВОЕГО пользователя нужно ввести его данные в файле .env
 
 ```bash
-const USER_EMAIL = "email;
-const USER_PASSWORD = "password";
+USER_EMAIL=email
+USER_PASSWORD=password
 ```
 
 ### Запуск тестов
