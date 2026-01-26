@@ -3,18 +3,23 @@ import {LoginPopupPage} from "../../pages/loginPopupPage/loginPopupPage";
 import {MainPage} from "../../pages/mainPage/mainPage";
 
 test.describe("Проверки попапа с авторизацией", () => {
-    test("Успешная авторизация", async ({ page }) => {
+    let mainPage: MainPage;
+    let loginPopupPage: LoginPopupPage;
+    
+    test.beforeEach(async ({ page }) => {
         //arrange
-        const loginPopupPage = new LoginPopupPage(page);
-        const mainPage = new MainPage(page);
+        // Инициализация
+        mainPage = new MainPage(page);
+        loginPopupPage = new LoginPopupPage(page);
+    });
 
-        const uniq = Date.now();
-        const email = `gedeon.qa+${uniq}@example.ru`;
-        const password = "Password123";
+    test("Успешная авторизация", async () => {
+        //arrange
+        const email = process.env.E2E_USER_EMAIL!;
+        const password = process.env.E2E_USER_PASSWORD!;
 
         //act
-        await mainPage.openMainPage();
-        await mainPage.openLoginDesktop();
+        await mainPage.openMainPageWithLoginPopup();
         await loginPopupPage.fillLogin(email);
         await loginPopupPage.fillPassword(password);
         await loginPopupPage.clickLoginBtn();
@@ -23,32 +28,22 @@ test.describe("Проверки попапа с авторизацией", () =>
         await mainPage.assertUserIsLoggedIn();
     });
 
-    test("переход на регистрацию по кнопке", async ({ page }) => {
-        //arrange
-        const loginPopup = new LoginPopupPage(page);
-        const mainPage = new MainPage(page);
-
+    test("Переход на регистрацию по кнопке", async ({ page }) => {
         //act
-        await mainPage.openMainPage();
-        await mainPage.openLoginDesktop();
-        await loginPopup.clickRegisterBtn();
+        await mainPage.openMainPageWithLoginPopup();
+        await loginPopupPage.clickRegisterBtn();
 
         //assert
-        await expect(page).toHaveURL("/authRegistration");
+        await expect(page).toHaveURL("/auth/register");
     });
 
-    test("логин с пустыми полями не должен увести на главную", async ({ page }) => {
-        //arrange
-        const loginPopup = new LoginPopupPage(page);
-        const mainPage = new MainPage(page);
-
+    test("Логин с пустыми полями не должен увести на главную", async () => {
         //act
-        await mainPage.openMainPage();
-        await mainPage.openLoginDesktop();
-        await loginPopup.clickLoginBtn();
+        await mainPage.openMainPageWithLoginPopup();
+        await loginPopupPage.clickLoginBtn();
 
         //assert
-        await loginPopup.assertEmailErrorIsVisible();
-        await loginPopup.assertPasswordErrorIsVisible();
+        await loginPopupPage.assertEmailErrorIsVisible();
+        await loginPopupPage.assertPasswordErrorIsVisible();
     });
 });

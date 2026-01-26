@@ -50,4 +50,13 @@ export class MainPage extends BasePage {
             .toBeVisible();
     }
 
+    async assertAdNotVisible(adId: string): Promise<void> {
+        const adLink = this.page.locator(`a[href*="${adId}"]`);
+        await expect(adLink).toHaveCount(0);
+    }
+
+    async openMainPageWithLoginPopup(): Promise<void> {
+        await this.openMainPage();
+        await this.openLoginDesktop();
+    }
 }
